@@ -15,6 +15,10 @@ rochka.club {
 		}
 	}
 
+	# 旧メディアURLをR2へ(rochka.club/files/*→media.rochka.club/local/*)
+	@legacyfiles path_regexp legacyfiles ^/files/(.*)$
+	redir @legacyfiles https://media.rochka.club/local/{re.legacyfiles.1} permanent
+
 	reverse_proxy app:3000 {
 		# 実クライアントIPはCloudflare経由で取得
 		header_up X-Real-IP {header.CF-Connecting-IP}
