@@ -9,9 +9,9 @@ curl https://get.docker.com/ | sudo sh
 ```
    
 ### Clone this repository
-Clone the misskey.blue-docker-provision repository from GitHub to server:  
+Clone the rochka.club-docker-provision repository from GitHub to server:  
 ```bash
-git clone --recursive https://github.com/chan-mai/misskey.blue-docker-provision.git
+git clone --recursive https://github.com/miel-misskey/rochka.club-docker-provision.git
 ```
    
 ### Edit configs (Misskey)
@@ -19,7 +19,7 @@ Enter any value for `POSTGRES_PASSWORD` and `POSTGRES_USER` (must be the same va
 Additionally, for encrypting database backup files, enter a 32-byte or longer string for `BACKUP_ENCRYPTION_KEY`. (This can be generated using `openssl rand -base64 32`).  
   
 ```
-cd ./misskey.blue-docker-provision
+cd ./rochka.club-docker-provision
 cp ./.config/.env.sample ./.config/.env
 vim ./.config/.env
 ```
