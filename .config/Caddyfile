@@ -34,13 +34,21 @@ rochka.club {
 	}
 
 	handle_errors {
-		# appコンテナ停止時などは自動でメンテナンスページ(503)へ
+		# appコンテナ停止時などのバックエンドエラー
 		@backend_down `{err.status_code} in [500, 501, 502, 503, 504, 522]`
 		handle @backend_down {
-			reverse_proxy maintenance:80 {
-				handle_response {
-					copy_response_headers
-					copy_response 503
+			# /api系は外形監視のためメンテナンスを返さず本来のエラー(5xx)を通す
+			@api path /api/*
+			handle @api {
+				respond {err.status_code}
+			}
+			# それ以外はメンテナンスページを200で返す
+			handle {
+				reverse_proxy maintenance:80 {
+					handle_response {
+						copy_response_headers
+						copy_response 200
+					}
 				}
 			}
 		}
