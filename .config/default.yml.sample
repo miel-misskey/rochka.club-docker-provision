@@ -24,9 +24,9 @@ redis:
 # ID生成方式 — 既存データが aid のため変更禁止
 id: 'aid'
 
-# 全文検索は未使用
-# fulltextSearch:
-#   provider: sqlPgroonga
+# 全文検索(PGroonga)
+fulltextSearch:
+  provider: sqlPgroonga
 
 
 # ── 任意 ──

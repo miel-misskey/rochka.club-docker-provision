@@ -63,8 +63,8 @@ services:
 
   db:
     restart: always
-    # Debian版postgres:15, 既定locale en_US.UTF-8で現行DBと一致するため
-    image: postgres:15
+        # Debian版postgres, 既定locale en_US.UTF-8で現行DBと一致するため
+    image: groonga/pgroonga:latest-debian-18
     ports:
       - '5430:5432'
     networks:
@@ -74,7 +74,7 @@ services:
     env_file:
       - .config/.env
     volumes:
-      - ./data/pg-15:/var/lib/postgresql/data
+      - ./data/pg-18:/var/lib/postgresql
     healthcheck:
       test: "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
       interval: 5s
