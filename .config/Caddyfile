@@ -1,0 +1,44 @@
+rochka.club {
+	# Cloudflare Origin証明書(CF → origin を Full-strict に)
+	tls /etc/ssl/certs/certificate.pem /etc/ssl/private/key.pem
+	encode gzip
+	header /assets Cache-Control "public, max-age=31536000, immutable"
+	file_server
+
+	log {
+		output file /var/log/caddy/access.log {
+			roll_size 500mb
+			roll_keep 10
+		}
+		format json {
+			time_format iso8601
+		}
+	}
+
+	reverse_proxy app:3000 {
+		# 実クライアントIPはCloudflare経由で取得
+		header_up X-Real-IP {header.CF-Connecting-IP}
+		header_up X-Forwarded-For {header.CF-Connecting-IP}
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Forwarded-Host {host}
+
+		# 死活監視(全バージョンで200を返す "/" を使用)
+		health_uri /
+		health_interval 10s
+		health_timeout 2s
+		health_status 200
+	}
+
+	handle_errors {
+		# appコンテナ停止時などは自動でメンテナンスページ(503)へ
+		@backend_down `{err.status_code} in [500, 501, 502, 503, 504, 522]`
+		handle @backend_down {
+			reverse_proxy maintenance:80 {
+				handle_response {
+					copy_response_headers
+					copy_response 503
+				}
+			}
+		}
+	}
+}

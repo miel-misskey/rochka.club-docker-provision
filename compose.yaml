@@ -1,0 +1,121 @@
+services:
+  proxy:
+    image: caddy:2
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    profiles:
+      - proxy
+    volumes:
+      - ./.config/Caddyfile:/etc/caddy/Caddyfile
+      - ./.config/certificate.pem:/etc/ssl/certs/certificate.pem
+      - ./.config/key.pem:/etc/ssl/private/key.pem
+      - ./data/caddy/data:/data
+      - ./data/caddy/config:/config
+      - ./data/caddy/logs:/var/log/caddy
+    networks:
+      - internal_network
+
+  maintenance:
+    image: caddy:2-alpine
+    restart: always
+    profiles:
+      - proxy
+    volumes:
+      - ./.config/maintenance.Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./html:/usr/share/caddy:ro
+    networks:
+      - internal_network
+
+  app:
+    image: misskey/misskey:2026.6.0@sha256:d3c2bf280aa930ea266e65fef4b0611ff5a2813041797c9be48ce0e8587c8c8c
+    restart: always
+    environment:
+      COREPACK_INTEGRITY_KEYS: 0
+    links:
+      - db
+      - redis
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    networks:
+      - internal_network
+    volumes:
+      - ./.config/default.yml:/misskey/.config/default.yml:ro
+      # - ./data/files:/misskey/files
+
+  redis:
+    restart: always
+    image: redis:7-alpine
+    networks:
+      - internal_network
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: "redis-cli ping"
+      interval: 5s
+      retries: 20
+
+  db:
+    restart: always
+    # Debian版postgres:15, 既定locale en_US.UTF-8で現行DBと一致するため
+    image: postgres:15
+    ports:
+      - '5430:5432'
+    networks:
+      internal_network:
+      misskey-postgres:
+        ipv4_address: 10.0.0.2
+    env_file:
+      - .config/.env
+    volumes:
+      - ./data/pg-15:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
+      interval: 5s
+      retries: 20
+
+  backup:
+    profiles:
+      - backup
+    image: ghcr.io/team-shahu/misskey-backup:2026.07.01@sha256:aaf9124cef785a77d98ec62fdf828f63fca40cbc931517a4d61cb07182c6438a
+    container_name: misskey-backup-go
+    restart: always
+    environment:
+      TZ: Asia/Tokyo
+    networks:
+      internal_network:
+      misskey-postgres:
+        ipv4_address: 10.0.0.3
+    env_file:
+      - .config/.env
+    volumes:
+      - mi-backups:/app/backups
+      - .config:/app/config:ro
+    logging:
+      options:
+        max-size: 5m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 1m
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+networks:
+  internal_network:
+  #   docker network create -d bridge --gateway=10.0.0.1 --subnet=10.0.0.0/27 misskey-postgres
+  misskey-postgres:
+    external: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/27
+
+volumes:
+  mi-backups:

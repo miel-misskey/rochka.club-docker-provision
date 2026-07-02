@@ -1,0 +1,14 @@
+# secret / 実行時データ — コミット禁止(*.sample のみ追跡)
+.env
+.config/.env
+.config/default.yml
+.config/certificate.pem
+.config/key.pem
+
+# 実行時に生成されるデータ(DB / redis / caddy / メディア / バックアップ)
+data/
+
+# 移行作業の一時ファイル
+*.dump
+*.sql.gz
+scripts/tmp/

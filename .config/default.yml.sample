@@ -1,0 +1,40 @@
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#   rochka.club Misskey config (docker)
+#   .config/default.yml.sample → cp .config/default.yml して secret を記入
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+url: https://rochka.club/
+
+port: 3000
+
+# PostgreSQL(compose service名 = db)
+db:
+  host: db
+  port: 5432
+  db: mk1
+  user: misskey
+  pass: 'CHANGE_ME'   # .config/.env の POSTGRES_PASSWORD と一致させる
+  # dbReplications: false
+
+# Redis(compose service名 = redis)
+redis:
+  host: redis
+  port: 6379
+
+# ID生成方式 — 既存データが aid のため変更禁止
+id: 'aid'
+
+# 全文検索は未使用
+# fulltextSearch:
+#   provider: sqlPgroonga
+
+
+# ── 任意 ──
+# proxyBypassHosts:
+#   - api.deepl.com
+#   - www.recaptcha.net
+#   - hcaptcha.com
+#   - challenges.cloudflare.com
+# proxyRemoteFiles: true
+# signToActivityPubGet: true
+# clusterLimit: 1

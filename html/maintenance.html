@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>メンテナンス中</title>
+<style>
+  :root {
+    --bg: #fdf5f8;
+    --ink: #3f2b34;
+    --muted: #a2808d;
+    --line: #f1dbe4;
+    --accent: #d97aa0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1216;
+      --ink: #f3e5ec;
+      --muted: #b4959f;
+      --line: #362730;
+      --accent: #e79ab6;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Helvetica Neue", "Hiragino Kaku Gothic ProN",
+                 "Yu Gothic", "Noto Sans JP", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    line-height: 1.9;
+  }
+
+  main {
+    width: 100%;
+    max-width: 34rem;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-family: -apple-system, "Helvetica Neue", "Segoe UI", sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--muted);
+    /* pルールのmax-width:26rem継承でボックスが左寄りになるためauto中央寄せ */
+    margin: 0 auto 2.2rem;
+  }
+
+  h1 {
+    font-weight: 500;
+    font-size: clamp(1.9rem, 6vw, 2.9rem);
+    letter-spacing: 0.06em;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .rule {
+    width: 3rem;
+    height: 1px;
+    background: var(--line);
+    border: 0;
+    margin: 2.2rem auto;
+  }
+
+  p {
+    margin: 0 auto;
+    max-width: 26rem;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  p + p { margin-top: 1.1rem; }
+
+  .status {
+    display: inline-block;
+    margin-top: 2.6rem;
+    font-family: -apple-system, "Helvetica Neue", "Segoe UI", sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5rem 1.1rem;
+  }
+
+  footer {
+    margin-top: 3.4rem;
+    font-family: -apple-system, "Helvetica Neue", "Segoe UI", sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Under Maintenance</p>
+
+    <h1>只今メンテナンス中です</h1>
+
+    <hr class="rule">
+
+    <p>システムの保守作業を行っています。ご不便をおかけしますが、いましばらくお待ちください。</p>
+    <p>復旧までもうしばらくお待ちください。</p>
+
+    <span class="status">現在ご利用いただけません</span>
+
+    <footer>
+      &copy; 2026 <a href="https://mq1.dev/">chan-mai</a>. All rights reserved.
+    </footer>
+  </main>
+</body>
+</html>
