@@ -11,9 +11,9 @@ services:
       - ./.config/Caddyfile:/etc/caddy/Caddyfile
       - ./.config/certificate.pem:/etc/ssl/certs/certificate.pem
       - ./.config/key.pem:/etc/ssl/private/key.pem
-      - ./data/caddy/data:/data
-      - ./data/caddy/config:/config
-      - ./data/caddy/logs:/var/log/caddy
+      - caddy-data:/data
+      - caddy-config:/config
+      - caddy-logs:/var/log/caddy
     networks:
       - internal_network
 
@@ -41,8 +41,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    ports:
-      - "3000:3000"
     networks:
       - internal_network
     volumes:
@@ -53,9 +51,11 @@ services:
     restart: always
     image: redis:7-alpine
     networks:
-      - internal_network
+      internal_network:
+      misskey-postgres:
+        ipv4_address: 10.0.0.4
     volumes:
-      - ./data/redis:/data
+      - redis:/data
     healthcheck:
       test: "redis-cli ping"
       interval: 5s
@@ -66,7 +66,7 @@ services:
         # Debian版postgres, 既定locale en_US.UTF-8で現行DBと一致するため
     image: groonga/pgroonga:latest-debian-18
     ports:
-      - '5430:5432'
+      - "127.0.0.1:5432:5432"
     networks:
       internal_network:
       misskey-postgres:
@@ -74,7 +74,7 @@ services:
     env_file:
       - .config/.env
     volumes:
-      - ./data/pg-18:/var/lib/postgresql
+      - pg-18:/var/lib/postgresql
     healthcheck:
       test: "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
       interval: 5s
@@ -107,6 +107,10 @@ services:
 
 networks:
   internal_network:
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: fd2c:5e71:9b04::/64
   #   docker network create -d bridge --gateway=10.0.0.1 --subnet=10.0.0.0/27 misskey-postgres
   misskey-postgres:
     external: true
@@ -117,3 +121,8 @@ networks:
 
 volumes:
   mi-backups:
+  pg-18:
+  redis:
+  caddy-data:
+  caddy-config:
+  caddy-logs:

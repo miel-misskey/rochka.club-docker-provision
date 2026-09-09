@@ -1,10 +1,3 @@
-# secret / 実行時データ — コミット禁止(*.sample のみ追跡)
-.env
-.config/.env
-.config/default.yml
-.config/certificate.pem
-.config/key.pem
-
 # 実行時に生成されるデータ(DB / redis / caddy / メディア / バックアップ)
 data/
 
@@ -12,3 +5,9 @@ data/
 *.dump
 *.sql.gz
 scripts/tmp/
+
+# doco-cd / Ansible
+doco-cd/sops_age_key.txt
+doco-cd/apprise_notify_urls.txt
+ansible/inventory.yml
+.DS_Store

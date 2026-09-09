@@ -1,0 +1,7 @@
+creation_rules:
+  - path_regex: ^\.config/(\.env|default\.yml|key\.pem)$
+    age: >-
+      age1hxytqhrfcllujszuaevq7jeygg0g95v435l4acdjzgtsmcgvhq7shcvxmk,
+      age145yagqxlptxtw0jg3yawdqj6r6075l3svdakhhe6t7u4nfterg7qall256
+  - path_regex: ^ansible/vars/secrets\.sops\.yml$
+    age: age145yagqxlptxtw0jg3yawdqj6r6075l3svdakhhe6t7u4nfterg7qall256

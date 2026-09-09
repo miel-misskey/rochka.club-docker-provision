@@ -1,3 +1,0 @@
-REPO="https://github.com/miel-misskey/rochka.club-docker-provision"
-UPDATE_REPO_ONLY=true
-UPDATE_IMAGE_BY_REPO=true
