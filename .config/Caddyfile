@@ -19,6 +19,19 @@ rochka.club {
 	@legacyfiles path_regexp legacyfiles ^/files/(.*)$
 	redir @legacyfiles https://media.rochka.club/local/{re.legacyfiles.1} permanent
 
+	# アイコン差し替え用CSS
+	handle /custom.css {
+		root * /srv/custom
+		file_server
+	}
+
+	replace {
+		match {
+			header Content-Type text/html*
+		}
+		"</head>" "<link rel=\"stylesheet\" href=\"/custom.css\"></head>"
+	}
+
 	reverse_proxy app:3000 {
 		# 実クライアントIPはCloudflare経由で取得
 		header_up X-Real-IP {header.CF-Connecting-IP}

@@ -6,7 +6,7 @@ x-logging: &logging
 
 services:
   proxy:
-    image: caddy:2
+    build: ./caddy
     restart: always
     ports:
       - "80:80"
@@ -15,6 +15,7 @@ services:
       - proxy
     volumes:
       - ./.config/Caddyfile:/etc/caddy/Caddyfile
+      - ./.config/custom.css:/srv/custom/custom.css:ro
       - ./.config/certificate.pem:/etc/ssl/certs/certificate.pem
       - ./.config/key.pem:/etc/ssl/private/key.pem
       - caddy-data:/data
